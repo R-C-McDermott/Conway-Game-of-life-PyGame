@@ -16,7 +16,7 @@ BACKGROUND = (50, 50, 50)
 BLOCK_COLOUR = (0, 255, 0)
 BORDER_COLOUR = (0, 0, 255)
 BLACK = (0, 0, 0)
-# GAME_FONT = pygame.font.SysFont('Times New Roman', 30)
+GAME_FONT = pygame.font.SysFont('Times New Roman', 30)
 FPS = 15
 
 
@@ -55,12 +55,15 @@ def get_coords(grid):
     return coords
 
 
-def draw_game(grid) -> None:
+def draw_game(grid, generation) -> None:
     WIN.fill(BACKGROUND)
     draw_grid()
     coords = get_coords(grid)
     for x, y in coords:
         pygame.draw.rect(WIN, BLOCK_COLOUR, (x, y, BLOCK_SIZE, BLOCK_SIZE))
+
+    text_surface = GAME_FONT.render(f"Generation: {generation}", True, BLOCK_COLOUR)
+    WIN.blit(text_surface, (40, HEIGHT - (BOTTOM_PANEL // 2)))
 
     pygame.display.update()
 
@@ -77,13 +80,15 @@ def main():
     grid = gr.Grid(GAME_SURFACE_X, GAME_SURFACE_Y, BLOCK_SIZE, start_conditions)
     run = True
     generate = False
+    generation = 0
     while run:
         clock.tick(FPS)
 
-        draw_game(grid)
+        draw_game(grid, generation)
 
-        if generate:
+        if generate and sum(sum(grid.grid_array)) != 0:
             grid.next_generation()
+            generation += 1
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -99,8 +104,11 @@ def main():
                     generate = True
                 # Resets the game - gives clean array to create shapes
                 if event.key == pygame.K_r:
+                    generation = 0
                     grid.reset_array()
                     generate = False
+
+
 
 
 if __name__ == "__main__":
