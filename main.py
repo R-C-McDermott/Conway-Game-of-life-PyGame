@@ -19,6 +19,8 @@ BLACK = (0, 0, 0)
 # GAME_FONT = pygame.font.SysFont('Times New Roman', 30)
 FPS = 15
 
+
+# Creates a sample starting setup containing 2 stable blocks
 start_conditions = np.zeros((GAME_SURFACE_X // BLOCK_SIZE, GAME_SURFACE_Y // BLOCK_SIZE), dtype=int)
 
 start_conditions[6, 6] = 1
@@ -41,6 +43,7 @@ start_conditions[5, 18] = 1
 start_conditions[6, 18] = 1
 start_conditions[7, 18] = 1
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 
 def get_coords(grid):
@@ -59,8 +62,6 @@ def draw_game(grid) -> None:
     for x, y in coords:
         pygame.draw.rect(WIN, BLOCK_COLOUR, (x, y, BLOCK_SIZE, BLOCK_SIZE))
 
-    grid.next_generation()
-
     pygame.display.update()
 
 
@@ -74,19 +75,32 @@ def draw_grid() -> None:
 def main():
     clock = pygame.time.Clock()
     grid = gr.Grid(GAME_SURFACE_X, GAME_SURFACE_Y, BLOCK_SIZE, start_conditions)
-    print()
     run = True
+    generate = False
     while run:
         clock.tick(FPS)
 
         draw_game(grid)
-        #x, y = pygame.mouse.get_pos()
-        #print(x, y)
+
+        if generate:
+            grid.next_generation()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 run = False
+            # Adds blocks to the game grid before running
+            if event.type == pygame.MOUSEBUTTONUP:
+                pos = pygame.mouse.get_pos()
+                grid.add_to_array(generate, pos, BLOCK_SIZE)
+            if event.type == pygame.KEYUP:
+                # Runs the current starting conditions
+                if event.key == pygame.K_SPACE:
+                    generate = True
+                # Resets the game - gives clean array to create shapes
+                if event.key == pygame.K_r:
+                    grid.reset_array()
+                    generate = False
 
 
 if __name__ == "__main__":
