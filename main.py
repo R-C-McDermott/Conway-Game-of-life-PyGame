@@ -54,7 +54,7 @@ start_conditions[7, 18] = 1
 # ~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 
-def get_coords(grid):
+def get_coords(grid) -> list:
     x_vals = np.where(grid.grid_array == 1)[1]
     y_vals = np.where(grid.grid_array == 1)[0]
     coords = []
@@ -71,7 +71,7 @@ def draw_game(grid, generation) -> None:
         pygame.draw.rect(WIN, BLOCK_COLOUR, (x, y, BLOCK_SIZE, BLOCK_SIZE))
 
     generation_text = GEN_FONT.render(f"Generation: {generation}", True, BLOCK_COLOUR)
-    WIN.blit(generation_text, (40, HEIGHT - (BOTTOM_PANEL // 2)))
+    WIN.blit(generation_text, (20, HEIGHT - (BOTTOM_PANEL // 2)))
 
     for i in range(len(game_instructions)):
         instructions_text = INSTR_FONT.render(game_instructions[i], True, BLOCK_COLOUR)
