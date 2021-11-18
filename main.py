@@ -16,8 +16,16 @@ BACKGROUND = (50, 50, 50)
 BLOCK_COLOUR = (0, 255, 0)
 BORDER_COLOUR = (0, 0, 255)
 BLACK = (0, 0, 0)
-GAME_FONT = pygame.font.SysFont('Times New Roman', 30)
+GEN_FONT = pygame.font.SysFont('consolas', 30)
+INSTR_FONT = pygame.font.SysFont('consolas', 12)
 FPS = 15
+
+game_instructions = ["Click on any block within the grid to",
+                     "add to the starting condition.",
+                     "",
+                     "press Space to begin the simulation.",
+                     "",
+                     "Press R to reset the game."]
 
 
 # Creates a sample starting setup containing 2 stable blocks
@@ -62,8 +70,12 @@ def draw_game(grid, generation) -> None:
     for x, y in coords:
         pygame.draw.rect(WIN, BLOCK_COLOUR, (x, y, BLOCK_SIZE, BLOCK_SIZE))
 
-    text_surface = GAME_FONT.render(f"Generation: {generation}", True, BLOCK_COLOUR)
-    WIN.blit(text_surface, (40, HEIGHT - (BOTTOM_PANEL // 2)))
+    generation_text = GEN_FONT.render(f"Generation: {generation}", True, BLOCK_COLOUR)
+    WIN.blit(generation_text, (40, HEIGHT - (BOTTOM_PANEL // 2)))
+
+    for i in range(len(game_instructions)):
+        instructions_text = INSTR_FONT.render(game_instructions[i], True, BLOCK_COLOUR)
+        WIN.blit(instructions_text, (300, GAME_SURFACE_Y + (i + 1)*10))
 
     pygame.display.update()
 
